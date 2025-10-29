@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube 訂閱成長策略</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Noto+Sans+TC:wght{400;500;700}&display=swap" rel="stylesheet">
+    <style>
+        /* 單欄式設計 - 標準專業色系 (邊框/線條式強調) */
+        :root {
+            --primary: #1565C0;      /* 專業深藍 - 主要強調色，標題，重要邊框 */
+            --highlight: #FF5722;    /* 亮眼橙紅 - 關鍵指標 (KPIs), 目標值 */
+            --bg-main: #FBFBFB;      /* 主背景色 - 更接近白色 */
+            --bg-secondary: #F0F4F8; /* 淺藍灰 - 次要區塊背景 */
+            
+            --card-bg: #FFFFFF;      /* 簡潔白 */
+            --text-main: #263238;    /* 深灰藍 - 主要文字色 */
+            --text-secondary: #6B7280; /* 柔和次要文字 */
+        }
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1024px; /* 限制寬度以符合單欄閱讀體驗 */
+            margin: auto;
+            padding: 1.5rem 1rem;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 0.75rem;
+            /* 增加陰影和邊框來提高差異化 */
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
+            border: 1px solid var(--bg-secondary);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        h1, h2, h3 {
+            font-weight: 700;
+        }
+        h2 {
+            font-size: 1.75rem;
+            border-bottom: 2px solid var(--bg-secondary); 
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary); 
+        }
+        h3 {
+            font-size: 1.25rem;
+            color: var(--primary); 
+            margin-bottom: 1rem;
+        }
+        
+        /* KPI 區塊樣式 */
+        .kpi-card { 
+            background-color: var(--bg-secondary); /* 淺藍灰底色 */
+            color: var(--text-main); /* 文字改回深色 */
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border: 2px solid var(--primary); /* 加上深藍邊框來強調結構 */
+        }
+        .kpi-stat {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--highlight); /* 維持橙紅來突顯數字 */
+            line-height: 1.1;
+        }
+        
+        /* 資金流 Flowchart 樣式 */
+        .flowchart-step {
+            padding: 0.75rem;
+            background-color: var(--card-bg); /* 白色底色 */
+            border-radius: 0.5rem;
+            border: 2px solid var(--highlight); /* 加上橙紅邊框來強調步驟 */
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-main); /* 文字改回深色 */
+        }
+        .flowchart-arrow {
+            font-size: 1.5rem;
+            color: var(--primary); 
+            margin: 0.5rem 0;
+        }
+        /* RWD 調整 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .kpi-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-5 md:px-8">
+            <h1 class="text-3xl md:text-4xl font-black text-center" style="color: var(--primary);">YouTube 訂閱成長策略</h1>
+            <p class="text-center text-sm md:text-base italic mt-1" style="color: var(--text-secondary);">自給自足零風險增長模型</p>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- 總結論與策略執行 --><section class="card text-center" style="border-top: 5px solid var(--highlight);">
+            <h2 class="text-xl md:text-2xl font-bold mb-2" style="color: var(--primary);">CMoney YT 投廣，最大化訂戶增長</h2>
+            <p class="text-lg max-w-4xl mx-auto font-semibold" style="color: var(--text-main);">
+                以廣告操作替代不足的運營管道，並提高關鍵字曝光量。
+            </p>
+            <p class="text-base italic mt-4 block p-4 rounded-lg max-w-4xl mx-auto" style="background-color: var(--bg-secondary); color: var(--text-main); border-left: 4px solid var(--primary);">
+                <span class="font-bold" style="color: var(--primary);">策略執行：</span>
+                挑選高觀看訂閱比的 16 部影片進行付費擴散，增加非演算法的觀看來源 (觸及陌生用戶)，預算取自原生廣告收益之 30% (NT$50,000)。
+            </p>
+        </section>
+
+        <!-- 關鍵指標與資金流 (組合區塊) --><section class="mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <!-- KPI Cards --><div class="kpi-card">
+                    <p class="text-sm font-semibold" style="opacity: 0.9;">📈 廣告預算 (總收益 27.8%)</p>
+                    <div class="kpi-stat mt-1 text-3xl">NT$50,000</div>
+                    <p class="text-xs" style="color: var(--text-secondary);">來自 NT$180,000 原生收益提撥</p>
+                </div>
+                <div class="kpi-card">
+                    <p class="text-sm font-semibold" style="opacity: 0.9;">▶️ Shorts 效率目標</p>
+                    <div class="kpi-stat mt-1 text-3xl">≥ 0.12%</div>
+                    <p class="text-xs" style="color: var(--text-secondary);">（頻道平均 0.09%）</p>
+                </div>
+                <div class="kpi-card">
+                    <p class="text-sm font-semibold" style="opacity: 0.9;">🎬 長影片效率目標</p>
+                    <div class="kpi-stat mt-1 text-3xl">≥ 1.20%</div>
+                    <p class="text-xs" style="color: var(--text-secondary);">（頻道平均 0.44%）</p>
+                </div>
+                <div class="kpi-card">
+                    <p class="text-sm font-semibold" style="opacity: 0.9;">✅ 財務風險</p>
+                    <div class="kpi-stat mt-1 text-3xl" style="color: var(--primary);">零</div> <!-- 財務風險用主色 (藍色) 強調 --><p class="text-xs" style="color: var(--text-secondary);">預算來自已產出收益</p>
+                </div>
+            </div>
+
+            <!-- 零風險資金流 (Flowchart) - 論點 I --><div class="card p-6">
+                <h3 class="text-center mb-4 border-b pb-2" style="color: var(--primary);">✅ 零風險資金流 (論點 I)</h3>
+                <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-2">
+                    <div class="flowchart-step w-full md:w-1/4">1. 節目內容產生原生收益</div>
+                    <div class="flowchart-arrow hidden md:block">→</div>
+                    <div class="flowchart-arrow md:hidden">↓</div>
+                    <div class="flowchart-step w-full md:w-1/4">2. 收益投入廣告預算</div>
+                    <div class="flowchart-arrow hidden md:block">→</div>
+                    <div class="flowchart-arrow md:hidden">↓</div>
+                    <div class="flowchart-step w-full md:w-1/4">3. 廣告驅動新訂閱者增長</div>
+                    <div class="flowchart-arrow hidden md:block">→</div>
+                    <div class="flowchart-arrow md:hidden">↓</div>
+                    <div class="flowchart-step w-full md:w-1/4">4. 頻道成長帶動更多收益</div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 論點 II - 內容策略：選品與效率 --><section class="card">
+            <h2>論點 II - 內容策略：最大化效率</h2>
+            <p class="mb-6 text-base text-center" style="color: var(--text-secondary);">策略核心：集中資源投放於已驗證的「高訂閱轉換內容」。</p>
+
+            <!-- 圖表區塊：直條圖 --><div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 items-center">
+                 <div>
+                    <h3 class="mb-2">選品效率比較 (訂閱比) - 直條圖</h3>
+                    <p class="mb-4 text-sm" style="color: var(--text-secondary);">選品目標（橙色）表現遠高於頻道平均（藍色）。</p>
+                    <div class="chart-container h-64 max-h-64">
+                        <canvas id="performanceComparisonChart"></canvas>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="mt-0">選品策略關鍵參考指標</h3>
+                    <p class="mb-4 text-sm" style="color: var(--text-secondary);">綜合考量多個面向，確保選品的穩定性和長期價值。</p>
+                    <div class="grid grid-cols-2 gap-3 text-center">
+                        <div class="p-3 rounded-lg border-2" style="background-color: var(--bg-secondary); border-color: var(--highlight);">
+                            <p class="font-bold text-sm" style="color: var(--highlight);">觀看次數 / 訂閱人數</p>
+                        </div>
+                        <div class="p-3 rounded-lg border-2" style="background-color: var(--bg-secondary); border-color: var(--highlight);">
+                            <p class="font-bold text-sm" style="color: var(--highlight);">訂閱比 (效率核心)</p>
+                        </div>
+                        <div class="p-3 rounded-lg border-2" style="background-color: var(--bg-secondary); border-color: var(--primary);">
+                            <p class="font-bold text-sm" style="color: var(--primary);">IP有名氣且正面</p>
+                        </div>
+                        <div class="p-3 rounded-lg border-2" style="background-color: var(--bg-secondary); border-color: var(--primary);">
+                            <p class="font-bold text-sm" style="color: var(--primary);">內容較無時效</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 選品清單與素材核心要求 --><div class="my-6">
+                <div class="p-6 rounded-lg mb-6" style="background-color: var(--bg-secondary); border: 1px solid var(--bg-secondary);">
+                    <h3 class="text-xl font-bold mb-3" style="color: var(--primary);">🎯 選品清單與素材核心要求 (共 16 支影片)</h3>
+                    
+                    <h4 class="font-bold text-lg mb-2" style="color: var(--text-main);">來賓人選清單</h4>
+                    <div class="flex flex-wrap gap-2 text-sm mb-6">
+                        <span class="px-3 py-1 rounded-full font-semibold bg-white" style="border: 1px solid var(--primary); color: var(--primary);">瓦基</span>
+                        <span class="px-3 py-1 rounded-full font-semibold bg-white" style="border: 1px solid var(--primary); color: var(--primary);">超馬芭樂</span>
+                        <span class="px-3 py-1 rounded-full font-semibold bg-white" style="border: 1px solid var(--primary); color: var(--primary);">吳嘉隆</span>
+                        <span class="px-3 py-1 rounded-full font-semibold bg-white" style="border: 1px solid var(--primary); color: var(--primary);">游庭皓</span>
+                        <span class="px-3 py-1 rounded-full font-semibold bg-white" style="border: 1px solid var(--primary); color: var(--primary);">闕又上</span>
+                        <span class="px-3 py-1 rounded-full font-semibold bg-white" style="border: 1px solid var(--primary); color: var(--primary);">郝旭烈</span>
+                        <span class="px-3 py-1 rounded-full font-semibold bg-white" style="border: 1px solid var(--primary); color: var(--primary);">小印</span>
+                        <span class="px-3 py-1 rounded-full font-semibold bg-white" style="border: 1px solid var(--primary); color: var(--primary);">清流君</span>
+                        <span class="px-3 py-1 rounded-full font-semibold bg-white" style="border: 1px solid var(--primary); color: var(--primary);">艾蜜莉</span>
+                        <span class="px-3 py-1 rounded-full font-semibold bg-white" style="border: 1px solid var(--primary); color: var(--primary);">周冠男</span>
+                    </div>
+
+                    <h4 class="font-bold text-lg mb-2 border-t pt-4" style="color: var(--highlight);">長影片廣告投放 (素材與目標)</h4>
+                    <p class="text-sm font-semibold mb-3" style="color: var(--text-secondary);">
+                        針對長影片（訂閱比 ≥ 1.20%）的廣告投放，<span class="font-bold" style="color: var(--primary);">直接使用長影片橫幅素材進行投放</span>。
+                    </p>
+                    <p class="text-sm font-semibold mb-3" style="color: var(--text-secondary);">
+                        <span class="font-bold" style="color: var(--primary);">目標：</span>YouTube接觸未訂閱者，例如搜尋結果首頁推薦、相關影片推薦、上刊其他站台影片版位(若有)。
+                    </p>
+                </div>
+
+                <!-- 影片清單詳細展示 --><div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                        <h4 class="font-bold text-xl mb-3 border-b pb-2" style="color: var(--primary);">▶️ Shorts 清單 (8 則)</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-sm" style="color: var(--text-secondary);">
+                            <li>一天的開始先做自己的事。你就贏過99%的人! #shorts #理財資優生 #瓦基 #閱讀 #個人成長 #早起 #晨型人 #自我成長</li>
+                            <li>公司變成「地雷股」還能待嗎????! #shorts #超馬芭樂 #產業 #投資 #台股 #理財資優生 #金管會 #薪水</li>
+                            <li>判斷多空只要記這句口訣!!｜緩漲急跌 vs 緩跌急漲 #shorts #吳嘉隆 #股市 #投資 #趨勢 #多頭 #空頭</li>
+                            <li>游庭皓：10年前你知道該選台積電還是鴻海？ #shorts #理財資優生 #台積電 #鴻海 #個股 #選股 #投資 #etf #長期買進</li>
+                            <li>買房等下輩子🤡❓游庭皓：年輕人寧願炒股｜#躺平 #游庭皓 #投資 #買房 #理財資優生</li>
+                            <li>大盤跌20%時你敢接嗎？闕又上：很多人理財失敗，是因為... ｜#shorts #etf #阿甘投資法 #闕又上 #etf錢滾錢 #定期定額 #低接 #空頭 #熊市</li>
+                            <li>又賠錢？闕又上: 建議一般人只做這2檔就很夠用 #shorts #長期買進 #阿甘投資法 etf錢滾錢 #etf</li>
+                            <li>2檔市值型ETF助小資翻身！選對躺著賺！#ETF錢滾錢 #ETF</li>
+                        </ol>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                        <h4 class="font-bold text-xl mb-3 border-b pb-2" style="color: var(--primary);">🎬 長影片清單 (8 則)</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-sm" style="color: var(--text-secondary);">
+                            <li>從窮小子到總經理，不窮忙只做最重要的事！3關鍵讓他45歲放棄千萬年薪，用4輪法則打造屬於自己的財務自由公式！｜ft.郝旭烈【理財資優生】ep35 #投資故事 #理財 #創業 #房地產 #被動收入</li>
+                            <li>【小資理財】從零開始的新手財務規劃：低薪、高物慾、孝親費壓得喘不過氣？如何存到第一筆緊急預備金或旅遊夢想？小資族管理支出、預算規劃表公開｜木木、財務專家小印｜錢來我家 EP1</li>
+                            <li>【歐印ETF】30歲前淨資產8位數，ALL IN投資4大關鍵心法，年化15%？公開全市場ETF投資策略｜ft.清流君 @MrWaterDrop【理財資優生】ep26 #被動收入</li>
+                            <li>艾蜜莉存股｜30歲前被資遣3次，從25K到5,000萬，靠什麼力量堅持下去？中間的過程都只是沿途的風景【理財資優生】 #EP2</li>
+                            <li>ETF新手別踩雷！小資族38歲退休必學7招｜ft. 超馬芭樂｜特別企劃 #ETF怎麼買</li>
+                            <li>遠離社群、擁抱耐心，學習變有錢的 3 大公式！｜他從聯發科年薪400萬到負債、創業失敗，靠實證科學找回生活主導權｜ft.張修修 @shoshotw ｜【理財資優生】ep21 #投資 #快樂收入</li>
+                            <li>你沒見過的【游庭皓】？3招翻轉低薪，月薪3.1萬也要理財｜高房價不平等，年輕要玩「資產遊戲」才財務自由？｜【理財資優生】ep22 #投資 #ETF #理財 #財務規劃 #投資故事</li>
+                            <li>【周冠男教授】7檔大盤ETF、5檔債券ETF股債配置！高股息ETF沒有未來？20年靠「2招」長期買進0050賺退休金，只會定期定額竟少賺20 - 60%？｜周冠男、葉芷娟｜ETF錢滾錢</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <!-- 結束：選品清單展示 --></section>
+
+        <!-- 論點 III - 執行架構：精準化投放 --><section class="card">
+            <h2>論點 III - 執行架構：精準化投放</h2>
+            <p class="mb-6 text-base text-center" style="color: var(--text-secondary);">採用「最高 CPV」出價策略，並針對不同層級的受眾精準分層測試。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3>受眾層級 (MECE)</h3>
+                    <p class="mb-4 text-sm" style="color: var(--text-secondary);">將受眾分為三層，進行獨立廣告群組測試：</p>
+                    <div class="space-y-3 text-sm md:text-base">
+                        <div class="p-4 rounded-lg" style="background-color: var(--bg-secondary); border-left: 5px solid var(--primary);">
+                            <h4 class="font-bold" style="color: var(--primary);">A. 核心受眾 (Warm)</h4>
+                            <p class="text-xs md:text-sm" style="color: var(--text-main);">頻道再行銷：鎖定既有互動流量，爭取最高轉換率。</p>
+                        </div>
+                        <div class="p-4 rounded-lg" style="background-color: var(--bg-secondary); border-left: 5px solid var(--highlight);">
+                            <h4 class="font-bold" style="color: var(--highlight);">B. 潛在受眾 (Lukewarm)</h4>
+                            <p class="text-xs md:text-sm" style="color: var(--text-main);">自訂區隔：精準發掘曾搜尋相關關鍵字的新訂閱者。</p>
+                        </div>
+                        <div class="p-4 rounded-lg" style="background-color: var(--bg-secondary); border-left: 5px solid var(--text-secondary);">
+                            <h4 class="font-bold" style="color: var(--text-main);">C. 擴大觸及 (Cold/Scale)</h4>
+                            <p class="text-xs md:text-sm" style="color: var(--text-main);">刊登位置：搶佔競爭對手或相關大型創作者的流量。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 開發需求廣告活動 (Demand Gen Campaigns) 解釋 --><div>
+                    <h3 class="mb-2">開發需求廣告活動 (Demand Gen Campaigns)</h3>
+                    <p class="mb-3 font-semibold text-sm" style="color: var(--primary);">
+                        策略目的：在 Google 高流量接觸點，刺激並捕獲潛在客戶的需求。
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 ml-4 text-sm" style="color: var(--text-secondary);">
+                        <li>Demand Gen 專為跨平台投放而設計，能讓廣告以原生方式觸及更廣泛但興趣相關的潛在訂閱者。</li>
+                        <li>目標：透過多格式素材，在客戶旅程的早期階段捕獲興趣，將觀看者轉化為忠實訂閱者。</li>
+                        <li>核心：廣告活動高度依賴視覺吸引力，高效率的影片素材是成功的關鍵。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 論點 IV - 績效驗證 --><section class="card">
+            <h2>論點 IV - 績效驗證</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm md:text-base">
+                <div class="p-4 rounded-lg border-2 text-center" style="border-color: var(--highlight); background-color: var(--bg-secondary);">
+                    <h4 class="font-bold text-lg mb-1" style="color: var(--highlight);">1. 訂閱淨增長</h4>
+                    <p class="text-xs" style="color: var(--text-secondary);">（廣告期間新增訂閱）-（歷史平均訂閱）</p>
+                </div>
+                <div class="p-4 rounded-lg border-2 text-center" style="border-color: var(--highlight); background-color: var(--bg-secondary);">
+                    <h4 class="font-bold text-lg mb-1" style="color: var(--highlight);">2. CPV (單次收視成本)</h4>
+                    <p class="text-xs" style="color: var(--text-secondary);">確保 CPV 低於預算上限，維持高效率。</p>
+                </div>
+                <div class="p-4 rounded-lg border-2 text-center" style="border-color: var(--highlight); background-color: var(--bg-secondary);">
+                    <h4 class="font-bold text-lg mb-1" style="color: var(--highlight);">3. 內容助推 (Organic Boost)</h4>
+                    <p class="text-xs" style="color: var(--text-secondary);">觀察被推廣影片的自然流量變化。</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const commonChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                family: "'Inter', 'Noto Sans TC', sans-serif"
+                            }
+                        }
+                    },
+                    tooltip: {
+                        titleFont: {
+                            family: "'Inter', 'Noto Sans TC', sans-serif"
+                        },
+                        bodyFont: {
+                            family: "'Inter', 'Noto Sans TC', sans-serif"
+                        }
+                    }
+                }
+            };
+
+            // 使用新的顏色變數
+            const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+            const highlightColor = getComputedStyle(document.documentElement).getPropertyValue('--highlight').trim();
+            const grayColor = '#A0AEC0'; // 較深的通用灰，與背景區隔
+
+            const performanceComparisonCtx = document.getElementById('performanceComparisonChart');
+            if (performanceComparisonCtx) {
+                new Chart(performanceComparisonCtx, {
+                    type: 'bar', // <-- 更改為直條圖
+                    data: {
+                        labels: ['Shorts (短影片)', '長影片'], // X-axis: 內容類型
+                        datasets: [
+                            {
+                                label: '頻道平均訂閱比 (%)',
+                                data: [0.09, 0.44], // 平均數據點
+                                backgroundColor: primaryColor, // 使用 primary 藍色
+                                borderColor: primaryColor,
+                                borderWidth: 1,
+                            },
+                            {
+                                label: '選品目標訂閱比 (%)',
+                                data: [0.12, 1.20], // 目標數據點
+                                backgroundColor: highlightColor, // 使用 highlight 橙紅色
+                                borderColor: highlightColor,
+                                borderWidth: 1,
+                            }
+                        ]
+                    },
+                    options: {
+                        ...commonChartOptions,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 1.3, // 為了讓 1.20 有足夠的空間顯示
+                                ticks: {
+                                    callback: function(value) {
+                                        return value.toFixed(2) + '%';
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: '訂閱比 (%)',
+                                    font: { family: "'Inter', 'Noto Sans TC', sans-serif" }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
